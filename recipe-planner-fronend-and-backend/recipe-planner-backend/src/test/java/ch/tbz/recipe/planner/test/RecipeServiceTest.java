@@ -151,4 +151,56 @@ public class RecipeServiceTest {
         verify(mapper, times(1)).domainToEntity(recipe);
         verify(repository, times(1)).save(recipeEntity);
     }
+
+    @Test
+    void testUpdateRecipe_Success() {
+        // Arrange
+        UUID recipeId = UUID.randomUUID();
+        UUID ingredientId = UUID.randomUUID();
+        RecipeEntity existingEntity = new RecipeEntity(recipeId, "Old Name", "Old Description", "Old URL", List.of(
+                new IngredientEntity(ingredientId, "Ingredient1", "Old Comment", Unit.GRAMM, 100)
+        ));
+        Recipe updatedRecipe = new Recipe(recipeId, "New Name", "New Description", "New URL", List.of(
+                new Ingredient(ingredientId, "Ingredient1", "New Comment", Unit.GRAMM, 100)
+        ));
+        RecipeEntity updatedEntity = new RecipeEntity(recipeId, "New Name", "New Description", "New URL", List.of(
+                new IngredientEntity(ingredientId, "Ingredient1", "New Comment", Unit.GRAMM, 100)
+        ));
+
+        when(repository.findById(recipeId)).thenReturn(Optional.of(existingEntity));
+        when(mapper.entityToDomain(existingEntity)).thenReturn(updatedRecipe);
+        when(mapper.domainToEntity(updatedRecipe)).thenReturn(updatedEntity);
+
+        Recipe result = recipeService.updateRecipe(recipeId, updatedRecipe);
+
+        assertEquals(updatedRecipe, result);
+        verify(repository, times(1)).findById(recipeId);
+        verify(repository, times(1)).save(updatedEntity);
+        verify(mapper, times(1)).entityToDomain(existingEntity);
+        verify(mapper, times(1)).domainToEntity(updatedRecipe);
+    }
+
+    @Test
+    void testUpdateRecipe_RecipeNotFound() {
+        UUID recipeId = UUID.randomUUID();
+        Recipe updatedRecipe = new Recipe(recipeId, "New Name", "New Description", "new_url", List.of());
+
+        when(repository.findById(recipeId)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> recipeService.updateRecipe(recipeId, updatedRecipe));
+        verify(repository, times(1)).findById(recipeId);
+        verify(mapper, never()).entityToDomain(any());
+        verify(mapper, never()).domainToEntity(any());
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void testUpdateRecipe_NullRecipe() {
+        UUID recipeId = UUID.randomUUID();
+
+        assertThrows(IllegalArgumentException.class, () -> recipeService.updateRecipe(recipeId, null));
+        verify(mapper, never()).entityToDomain(any());
+        verify(mapper, never()).domainToEntity(any());
+        verify(repository, never()).save(any());
+    }
 }

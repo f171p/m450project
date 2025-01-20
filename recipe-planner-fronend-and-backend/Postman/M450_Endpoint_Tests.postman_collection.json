@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "13765fdd-1178-4ce7-94fc-8ffe25e22497",
+		"name": "M450_Endpoint_Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26283275"
+	},
+	"item": [
+		{
+			"name": "Get All",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(recipe => {\r",
+							"        pm.expect(recipe).to.have.property('id');\r",
+							"        pm.expect(recipe).to.have.property('name');\r",
+							"        pm.expect(recipe).to.have.property('description');\r",
+							"        pm.expect(recipe).to.have.property('imageUrl');\r",
+							"        pm.expect(recipe).to.have.property('ingredients');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ingredients array is present and contains expected number of elements\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    pm.expect(responseData[0]).to.have.property('ingredients').that.is.an('array');\r",
+							"    pm.expect(responseData[0].ingredients).to.have.lengthOf.at.least(1);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate data types for id, name, comment, unit, and amount in ingredients array\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(recipe) {\r",
+							"    pm.expect(recipe.id).to.be.a('string');\r",
+							"    pm.expect(recipe.name).to.be.a('string');\r",
+							"    pm.expect(recipe.description).to.be.a('string');\r",
+							"    pm.expect(recipe.imageUrl).to.be.a('string');\r",
+							"    pm.expect(recipe.ingredients).to.be.an('array');\r",
+							"    recipe.ingredients.forEach(function(ingredient) {\r",
+							"      pm.expect(ingredient.id).to.be.a('string');\r",
+							"      pm.expect(ingredient.name).to.be.a('string');\r",
+							"      pm.expect(ingredient.comment).to.be.a('string');\r",
+							"      pm.expect(ingredient.unit).to.be.a('string');\r",
+							"      pm.expect(ingredient.amount).to.be.a('number');\r",
+							"    });\r",
+							"  });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/recipes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"recipes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Recipe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.id).to.exist;\r",
+							"  pm.expect(responseData.name).to.exist;\r",
+							"  pm.expect(responseData.description).to.exist;\r",
+							"  pm.expect(responseData.imageUrl).to.exist;\r",
+							"  pm.expect(responseData.ingredients).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ingredients array is present and contains expected number of elements\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('object');\r",
+							"  pm.expect(responseData.ingredients).to.exist;\r",
+							"  pm.expect(responseData.ingredients).to.be.an('array');\r",
+							"  pm.expect(responseData.ingredients).to.have.lengthOf.at.least(1, \"At least one ingredient should be present\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Id, name, comment, and unit should be non-empty strings\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Id should not be empty\");\r",
+							"    pm.expect(responseData.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Name should not be empty\");\r",
+							"    \r",
+							"    responseData.ingredients.forEach(function(ingredient) {\r",
+							"        pm.expect(ingredient.id).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Ingredient id should not be empty\");\r",
+							"        pm.expect(ingredient.name).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Ingredient name should not be empty\");\r",
+							"        pm.expect(ingredient.comment).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Ingredient comment should not be empty\");\r",
+							"        pm.expect(ingredient.unit).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Ingredient unit should not be empty\");\r",
+							"        pm.expect(ingredient.amount).to.be.a('number').and.to.be.at.least(0, \"Ingredient amount should be a non-negative number\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"const responseData = pm.response.json();\r",
+							"pm.globals.set(\"id\", responseData.id);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\" : \"dacf184a-a4b2-4867-8374-ed76c3a0bfc7\",\r\n    \"name\" :  \"Croissant\",\r\n    \"description\" : \"Bread thing\",\r\n    \"imageUrl\" : \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB6JUFx_GK_q3Tnj2qQhrQi8Kck7WywsA99A&s\",\r\n    \"ingredients\": [\r\n            {\r\n                \"id\": \"d3f86b6f-f5b7-466c-9ce1-8c445f494ce6\",\r\n                \"name\": \"Flour\",\r\n                \"comment\": \"Wheat\",\r\n                \"unit\": \"GRAMM\",\r\n                \"amount\": 100\r\n            }\r\n        ]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/recipes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"recipes"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Added Recipe By Id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields - id, name, description, imageUrl, and ingredients\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.id).to.exist;\r",
+							"    pm.expect(responseData.name).to.exist;\r",
+							"    pm.expect(responseData.description).to.exist;\r",
+							"    pm.expect(responseData.imageUrl).to.exist;\r",
+							"    pm.expect(responseData.ingredients).to.exist;\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ingredients array is present and contains expected number of elements\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.ingredients).to.exist.and.to.be.an('array');\r",
+							"    pm.expect(responseData.ingredients).to.have.lengthOf.at.least(1, \"Ingredients array should not be empty\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check for non-empty 'id', 'name', 'comment', and 'unit' in 'ingredients'\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"\r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.id).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+							"    pm.expect(responseData.name).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+							"\r",
+							"    responseData.ingredients.forEach(function (ingredient) {\r",
+							"        pm.expect(ingredient.id).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+							"        pm.expect(ingredient.name).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+							"        pm.expect(ingredient.comment).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+							"        pm.expect(ingredient.unit).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");\r",
+							"        pm.expect(ingredient.amount).to.exist.and.to.be.a('number').and.to.be.at.least(0, \"Value should not be negative\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/recipes/recipe/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"recipes",
+						"recipe",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Added Recipe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('object');\r",
+							"    pm.expect(responseData.id).to.exist;\r",
+							"    pm.expect(responseData.name).to.exist;\r",
+							"    pm.expect(responseData.description).to.exist;\r",
+							"    pm.expect(responseData.imageUrl).to.exist;\r",
+							"    pm.expect(responseData.ingredients).to.exist;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Check for exact values of the fields in the response\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData.id).to.equal(pm.globals.get(\"id\"));\r",
+							"pm.globals.get(\"variable_key\");\r",
+							"    pm.expect(responseData.name).to.equal(\"Burger Bun\");\r",
+							"    pm.expect(responseData.description).to.equal(\"Bread thing for burger\");\r",
+							"    pm.expect(responseData.imageUrl).to.equal(\"https://handletheheat.com/wp-content/uploads/2023/04/homemade-burger-buns-SQUARE.jpg\");\r",
+							"\r",
+							"    responseData.ingredients.forEach(function(ingredient) {\r",
+							"        pm.expect(ingredient.name).to.equal(\"Flour\");\r",
+							"        pm.expect(ingredient.comment).to.equal(\"Wheat\");\r",
+							"        pm.expect(ingredient.unit).to.equal(\"GRAMM\");\r",
+							"        pm.expect(ingredient.amount).to.equal(100);\r",
+							"    });\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\" : \"dacf184a-a4b2-4867-8374-ed76c3a0bfc7\",\r\n    \"name\" :  \"Burger Bun\",\r\n    \"description\" : \"Bread thing for burger\",\r\n    \"imageUrl\" : \"https://handletheheat.com/wp-content/uploads/2023/04/homemade-burger-buns-SQUARE.jpg\",\r\n    \"ingredients\": [\r\n            {\r\n                \"id\": \"d3f86b6f-f5b7-466c-9ce1-8c445f494ce6\",\r\n                \"name\": \"Flour\",\r\n                \"comment\": \"Wheat\",\r\n                \"unit\": \"GRAMM\",\r\n                \"amount\": 100\r\n            }\r\n        ]\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/recipes/{{id}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"recipes",
+						"{{id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {\r",
+							"  pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response has the required fields\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    responseData.forEach(recipe => {\r",
+							"        pm.expect(recipe).to.have.property('id');\r",
+							"        pm.expect(recipe).to.have.property('name');\r",
+							"        pm.expect(recipe).to.have.property('description');\r",
+							"        pm.expect(recipe).to.have.property('imageUrl');\r",
+							"        pm.expect(recipe).to.have.property('ingredients');\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Ingredients array is present and contains expected number of elements\", function () {\r",
+							"    const responseData = pm.response.json();\r",
+							"    \r",
+							"    pm.expect(responseData).to.be.an('array');\r",
+							"    pm.expect(responseData[0]).to.have.property('ingredients').that.is.an('array');\r",
+							"    pm.expect(responseData[0].ingredients).to.have.lengthOf.at.least(1);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"pm.test(\"Validate data types for id, name, comment, unit, and amount in ingredients array\", function () {\r",
+							"  const responseData = pm.response.json();\r",
+							"  \r",
+							"  pm.expect(responseData).to.be.an('array');\r",
+							"  responseData.forEach(function(recipe) {\r",
+							"    pm.expect(recipe.id).to.be.a('string');\r",
+							"    pm.expect(recipe.name).to.be.a('string');\r",
+							"    pm.expect(recipe.description).to.be.a('string');\r",
+							"    pm.expect(recipe.imageUrl).to.be.a('string');\r",
+							"    pm.expect(recipe.ingredients).to.be.an('array');\r",
+							"    recipe.ingredients.forEach(function(ingredient) {\r",
+							"      pm.expect(ingredient.id).to.be.a('string');\r",
+							"      pm.expect(ingredient.name).to.be.a('string');\r",
+							"      pm.expect(ingredient.comment).to.be.a('string');\r",
+							"      pm.expect(ingredient.unit).to.be.a('string');\r",
+							"      pm.expect(ingredient.amount).to.be.a('number');\r",
+							"    });\r",
+							"  });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/recipes",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"recipes"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

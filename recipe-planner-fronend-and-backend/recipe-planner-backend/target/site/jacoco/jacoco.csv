@@ -7,6 +7,6 @@ recipe-planner-backend,ch.tbz.recipe.planner.mapper,CommonMapperConfig,3,0,0,0,1
 recipe-planner-backend,ch.tbz.recipe.planner,RecipePlannerApplication,5,136,0,0,2,15,1,6,1,6
 recipe-planner-backend,ch.tbz.recipe.planner.domain,Unit,0,33,0,0,0,6,0,1,0,1
 recipe-planner-backend,ch.tbz.recipe.planner.domain,Ingredient,182,56,40,0,1,8,24,12,4,12
-recipe-planner-backend,ch.tbz.recipe.planner.domain,Recipe,194,61,45,1,0,8,26,13,3,13
-recipe-planner-backend,ch.tbz.recipe.planner.service,RecipeService,0,49,0,0,0,9,0,4,0,4
-recipe-planner-backend,ch.tbz.recipe.planner.controller,RecipeController,26,13,0,0,3,5,3,2,3,2
+recipe-planner-backend,ch.tbz.recipe.planner.domain,Recipe,194,61,45,1,0,9,26,13,3,13
+recipe-planner-backend,ch.tbz.recipe.planner.service,RecipeService,0,82,0,0,0,15,0,5,0,5
+recipe-planner-backend,ch.tbz.recipe.planner.controller,RecipeController,36,13,0,0,4,5,4,2,4,2

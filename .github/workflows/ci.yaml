@@ -98,6 +98,9 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Generate site
+        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml clean
+        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml dependency:purge-local-repository
+        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml install
         run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml site
 
       - name: Deploy site to GitHub Pages

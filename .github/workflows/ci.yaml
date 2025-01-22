@@ -98,10 +98,11 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Generate site
-        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml clean
-        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml dependency:purge-local-repository
-        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml install
-        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml site
+        run: |
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml clean
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml dependency:purge-local-repository
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml install
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml site
 
       - name: Deploy site to GitHub Pages
         uses: actions/upload-pages-artifact@v1

@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Build the application
-        run: mvn --batch-mode clean compile
+        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml --batch-mode clean compile
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v3
@@ -60,8 +60,8 @@ jobs:
 
       - name: Run tests and generate coverage report
         run: |
-          mvn --batch-mode test
-          mvn --batch-mode jacoco:report
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml --batch-mode test
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml --batch-mode jacoco:report
 
       - name: Upload coverage artifacts
         uses: actions/upload-artifact@v3
@@ -98,7 +98,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Generate site
-        run: mvn site
+        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml site
 
       - name: Deploy site to GitHub Pages
         uses: actions/upload-pages-artifact@v1

@@ -1,0 +1,76 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'oracle'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build the application
+        run: mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml --batch-mode clean compile
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: recipe-planner-fronend-and-backend/recipe-planner-backend/target/
+
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'oracle'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Run tests and generate coverage report
+        run: |
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml --batch-mode test
+          mvn -f recipe-planner-fronend-and-backend/recipe-planner-backend/pom.xml --batch-mode jacoco:report
+
+      - name: Upload coverage artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: recipe-planner-fronend-and-backend/recipe-planner-backend/target/site/jacoco
+
+      - name: Publish JUnit test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: junit-results
+          path: recipe-planner-fronend-and-backend/recipe-planner-backend/target/surefire-reports/*.xml

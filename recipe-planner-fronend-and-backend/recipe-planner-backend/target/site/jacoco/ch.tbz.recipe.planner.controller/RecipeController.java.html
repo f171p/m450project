@@ -41,5 +41,10 @@ public class RecipeController {
 <span class="nc" id="L41">        return new ResponseEntity&lt;&gt;(service.addRecipe(recipe), HttpStatus.OK);</span>
     }
 
+    @PutMapping(value = &quot;/api/recipes/{recipeId}&quot;)
+    public ResponseEntity&lt;Recipe&gt; updateRecipe(@PathVariable UUID recipeId, @RequestBody Recipe recipe) {
+<span class="nc" id="L46">        return new ResponseEntity&lt;&gt;(service.updateRecipe(recipeId, recipe), HttpStatus.OK);</span>
+    }
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

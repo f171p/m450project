@@ -1,9 +1,7 @@
 package ch.tbz.recipe.planner.domain;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +9,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Setter
+@Getter
 public class Recipe {
 
     private UUID id;

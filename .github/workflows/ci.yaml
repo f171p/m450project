@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'oracle'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
@@ -47,6 +48,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'oracle'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
@@ -85,6 +87,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
+          distribution: 'oracle'
 
       - name: Cache Maven dependencies
         uses: actions/cache@v3
